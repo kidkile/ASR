@@ -19,6 +19,7 @@ function gmms = gmmTrain( dir_train, max_iter, epsilon, M )
 
 DD = dir(dir_train);
 gmms ={};
+%pesudo code
 % Initialize theta
 i = 0;
 prev_L = -Inf;
