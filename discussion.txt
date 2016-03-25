@@ -18,3 +18,6 @@ none of the trained speaker models, and how would your classifier come to this d
 
 (3). Can you think of some alternative methods for doing speaker identification
  that don’t use Gaussian mixtures?
+
+
+3.2 Experiments and discussion.
