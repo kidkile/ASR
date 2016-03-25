@@ -1,2 +1,20 @@
 2.3 Experiments and discussion.
 
+(1). How might you improve the classification accuracy of the Gaussian mixtures, 
+without adding more training data?
+
+
+
+
+
+
+(2). When would your classifier decide that a given test utterance comes from 
+none of the trained speaker models, and how would your classifier come to this decision?
+
+
+
+
+
+
+(3). Can you think of some alternative methods for doing speaker identification
+ that don’t use Gaussian mixtures?
