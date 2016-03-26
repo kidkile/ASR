@@ -38,4 +38,3 @@ gmms ={};
 % Each sub folder name is the name of speaker.
 % Then, all Training sub folders are similar to each other.
 % (speech contents) but different speakers.
-    
