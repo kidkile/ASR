@@ -17,8 +17,9 @@ function gmms = gmmTrain( dir_train, max_iter, epsilon, M )
 %                                          (:,:,i) is for i^th mixture
 
 
-DD = dir(dir_train);
+
 gmms ={};
+mfcc_dir = dir( [ dir_train, filesep, '*', 'mfcc'] )
 % Initialize theta
 %i = 0;
 %prev_L = -Inf;
@@ -38,3 +39,5 @@ gmms ={};
 % Each sub folder name is the name of speaker.
 % Then, all Training sub folders are similar to each other.
 % (speech contents) but different speakers.
+% There are 30 speakers in Training
+
