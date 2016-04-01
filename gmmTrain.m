@@ -28,6 +28,19 @@ gmm = struct();
 % input dir, for Training data with all speakers' foler
 DD = dir(dir_train);
 % a.initializing theta
+% a-1. Initialize omega_m randomly with constrains.
+omega = 1/M;
+% a-2. Initialize each mu_m to a random vector from the data
+mu = zeros(14,M);
+% a-3. Initialize sigma_m to a identity matrix.d =14.
+sigma = eye(14);
+
+% theta ={w,u,E}
+theta = {omega,mu,sigma};
+prev_L = -Inf;
+improvement = Inf;  
+
+
 for i=4:length(DD)
     % for each speaker, the directory of their mfcc files.
     speaker_dir = dir(strcat(dir_train,'/',DD(i).name));
@@ -38,18 +51,7 @@ for i=4:length(DD)
         
     end
 end
-% a-1. Initialize omega_m randomly with constrains.
-omega = 1/M;
-% a-2. Initialize each mu_m to a random vector from the data
-mu = ;
-% a-3. Initialize sigma_m to a identity matrix.d =14.
-sigma = eye(14);
-
-% theta ={w,u,E}
-theta = {omega,mu,sigma};
-
-prev_L = -Inf;
-improvement = Inf;    
+  
     
     
     
