@@ -42,12 +42,20 @@ gmms ={};
 % (speech contents) but different speakers.
 % There are 30 speakers in Training
 
-
+% input dir, for Training data with all speakers' foler
 DD = dir(dir_train);
-% for each speaker, the directory of their mfcc files.
-mfcc_dir = dir( [ dir_train, filesep, '*', 'mfcc'] )
+
 % a.initializing theta
 theta = {omega_m,mu_m,sigma_m};
+for i=4:length(DD)
+    % for each speaker, the directory of their mfcc files.
+    speak_name = DD(i).name
+    
+    mfcc_dir = dir( [ dir_train, filesep, '*', 'mfcc'] )
+    
+    
+    
+end
 % a-1. Initialize each mu_m to a random vector from the data
 
 % a-2. Initialize sigma_m to a random diagonal matrix.

@@ -17,37 +17,31 @@ function gmms = gmmTrain( dir_train, max_iter, epsilon, M )
 %                                          (:,:,i) is for i^th mixture
 
 
-
-gmms ={};
-
-
-% Initialize theta
-%i = 0;
-%prev_L = -Inf;
-%improvement = Inf;
-%while i =< max_iter and improvement >= epsilon
-%   L = ComputeLikelihood(X,theta);
-%    theta = UpdateParameters(theta,X,L);
-%    improvement +L- prev_L
-%    prev_L = L
-%    i = i+1
-    
-%end
-
-% analysis for input mfcc
-% In each Training sub folders(under Training), there is a list of files 
-% including(x.mfccx.txt, x.wav) where x is the name of contents.
-% Each sub folder name is the name of speaker.
-% Then, all Training sub folders are similar to each other.
-% (speech contents) but different speakers.
-% There are 30 speakers in Training
+% (Test information #dont delete)
+% dir_train = '/Users/menglongji/Desktop/ASR/speechdata/Training'
+% DD = dir(dir_train)
+% mfcc_dir = dir( [ dir_train, filesep, '*', 'mfcc'] )
+%
 
 
+% input dir, for Training data with all speakers' foler
 DD = dir(dir_train);
-% for each speaker, the directory of their mfcc files.
-mfcc_dir = dir( [ dir_train, filesep, '*', 'mfcc'] )
+
 % a.initializing theta
 theta = {omega_m,mu_m,sigma_m};
+for i=4:length(DD)
+    % for each speaker, the directory of their mfcc files.
+    speaker_dir = dir(strcat(dir_train,'/',DD(i).name));
+    mfcc_dir = dir( [ speaker_dir, filesep, '*', 'mfcc'] );
+    
+    
+    
+    
+    
+    
+    
+    
+end
 % a-1. Initialize each mu_m to a random vector from the data
 
 % a-2. Initialize sigma_m to a random diagonal matrix.
