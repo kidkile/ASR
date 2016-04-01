@@ -24,7 +24,7 @@ function gmms = gmmTrain( dir_train, max_iter, epsilon, M )
 % mfcc_dir = dir( [ speaker_dir, filesep, '*', 'mfcc'] );
 %
 
-
+gmm = struct();
 % input dir, for Training data with all speakers' foler
 DD = dir(dir_train);
 % a.initializing theta
@@ -38,7 +38,18 @@ for i=4:length(DD)
         
     end
 end
-    
+% a-1. Initialize omega_m randomly with constrains.
+omega = 1/M;
+% a-2. Initialize each mu_m to a random vector from the data
+mu = ;
+% a-3. Initialize sigma_m to a identity matrix.d =14.
+sigma = eye(14);
+
+% theta ={w,u,E}
+theta = {omega,mu,sigma};
+
+prev_L = -Inf;
+improvement = Inf;    
     
     
     
@@ -47,14 +58,4 @@ end
     
 end
 
-% a-1. Initialize each mu_m to a random vector from the data
-mu = 
-% a-2. Initialize sigma_m to a identity matrix.d =14.
-sigma = eye(14);
-% a-3. Initialize omega_m randomly with constrains.
-omega = 1/M;
-% theta ={w,u,E}
-theta = {omega,mu,sigma};
 
-prev_L = -Inf;
-improvement = Inf;
