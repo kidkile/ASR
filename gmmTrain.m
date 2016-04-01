@@ -19,7 +19,9 @@ function gmms = gmmTrain( dir_train, max_iter, epsilon, M )
 
 
 gmms ={};
+% for each speaker, the directory of their mfcc files.
 mfcc_dir = dir( [ dir_train, filesep, '*', 'mfcc'] )
+
 % Initialize theta
 %i = 0;
 %prev_L = -Inf;
