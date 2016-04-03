@@ -41,10 +41,11 @@ for m=1:8
     mu(m,:)=mu(m,:)+row
 end
 % a-3. Initialize sigma_m to a identity matrix.d =14.
-sigma = eye(14);
-
-
-
+for n=1:M
+    sigma(:,:,n) =eye(d);
+end
+    
+    
 
 % theta ={w,u,E}
 theta = {omega,mu,sigma};

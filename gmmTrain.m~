@@ -34,23 +34,17 @@ DD = dir(dir_train);
 % a-1. Initialize omega_m randomly with constrains.
 omega = ones(1,M)*(1/M);
 % a-2. Initialize each mu_m to a random vector from the data
-
-msize = numel(mfcc_matrix);
 mu = zeros(8,14)
+msize = numel(mfcc_matrix);
 for m=1:8
     row=mfcc_matrix(randperm(msize,14))
     mu(m,:)=mu(m,:)+row
 end
-
 % a-3. Initialize sigma_m to a identity matrix.d =14.
-sigma = eye(14);
-for m=1:M
+sigma = zeros(14,14,M);
+for n=1:M
     
     
-    
-end
-
-
 
 % theta ={w,u,E}
 theta = {omega,mu,sigma};
