@@ -24,7 +24,7 @@ function gmms = gmmTrain( dir_train, max_iter, epsilon, M )
 % mfcc_dir = dir( [ strcat(dir_train,'/',DD(4).name), filesep, '*', 'mfcc'] );
 % '/Users/menglongji/Desktop/ASR/speechdata/Training/FCJF0/SA1.mfcc'
 
-gmm = struct();
+gmm = {};
 % input dir, for Training data with all speakers' foler
 DD = dir(dir_train);
 
@@ -55,25 +55,30 @@ for i=4:length(DD)
     for n=1:M
         sigma(:,:,n) = eye(D);
     end
-end
-% theta ={w,u,E}
-% theta = {omega,mu,sigma};
+    % theta ={w,u,E}
+    % theta = {omega,mu,sigma};
+    
+    
+    prev_L = -Inf;
+    improvement = Inf;
+    l=0;
+    while l<= max_iter && improvement >= epsilon
+        L = ComputeLikelihood(X,theta);
+        theta = UpdateParameters(theta,X,L);
+        prev_L =L;
+        l = l+1;
+    end
+    
+    gmm{k}={};
+    gmm{k}.name = DD(i).name;
+    gmm{k}.weights = omega;
+    gmm{k}.means = mu;
+    gmm{k}.cov = sigma;
+    
+    
+    
 
-
-prev_L = -Inf;
-improvement = Inf;  
-l=0;
-while l<= max_iter && improvement >= epsilon
-    L = ComputeLikelihood(X,theta);
-    theta = UpdateParameters(theta,X,L);
-    
 end
-    
-    
-    
-    
-    
-    
 end
 
 % Helper Functions as list below:
@@ -99,8 +104,10 @@ for t=1:T
             numer(m,t) = exp((-0.5)*((x(t,d)-mu(d,m))^2)/sigma(d,d,m));
         end
         b(t,m)=numer(m,t)/denom(m);
-        weight_m = omega(1,m);
-        p_m_x_theta =
+        weight_sum = omega(1,m)*b(t,m);
+        p(t,m) = (omega(1,m)*b(t,m))/weight_sum;
+        p_x = b(t,m) * p_m_x;
+        L=p(t,m)*log(b(t,m));
     end
     
     
@@ -119,11 +126,15 @@ function theta = UpdateParam(T,max_iter, epsilon, M)
 %           epsilon    : minimum improvement for iteration (float)
 %           M          : number of Gaussians/mixture (integer)
 % outputs:
-weight = sum(pm_x,2)/T;
-mu =;
-for i=1:M
-    sigma(:,:,m) =
+for m=1:M
+    
+    for t=1:T
+        omega_bar= sum(p(m,t))/T;
+    end
 end
+mu_bar;
+sigma_bar;
 
+    
 
 end

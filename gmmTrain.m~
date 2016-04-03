@@ -24,7 +24,7 @@ function gmms = gmmTrain( dir_train, max_iter, epsilon, M )
 % mfcc_dir = dir( [ strcat(dir_train,'/',DD(4).name), filesep, '*', 'mfcc'] );
 % '/Users/menglongji/Desktop/ASR/speechdata/Training/FCJF0/SA1.mfcc'
 
-gmm = struct();
+gmm = {};
 % input dir, for Training data with all speakers' foler
 DD = dir(dir_train);
 
@@ -66,9 +66,12 @@ l=0;
 while l<= max_iter && improvement >= epsilon
     L = ComputeLikelihood(X,theta);
     theta = UpdateParameters(theta,X,L);
-    
+    prev_L =L;
+    l = l+1;
 end
-    
+gmm{i}={};
+gmm{i}
+ gmm{i} 
     
     
     
@@ -78,7 +81,7 @@ end
 
 % Helper Functions as list below:
 
-function L = ComputeLikelihood(x,D,T,omega,mu,sigma,max_iter, epsilon, M)
+function L = ComputeLikelihood(x,T,M,D,omega,mu,sigma,max_iter, epsilon)
 % ComputeLikelihood
 % inputs:
 %           x          : mfcc_matrix
@@ -93,19 +96,19 @@ function L = ComputeLikelihood(x,D,T,omega,mu,sigma,max_iter, epsilon, M)
 % outputs:
 b = zeros(T,M);
 for t=1:T
-    
     for m=1:M
-        
         for d=1:D
-            % By simplification of original equation
-            % [(x[n]-mu[n])^2 / 2*sigma[n]^2] -
-            ans1 = -[0.5*((x(t,d)^2)*(sigma^(-2))-mu(d,m))];
-            ans2 =;
-            ans = ans1-ans2;
+            denom(m) =(2*pi)^(D/2)*sqrt(prod(sigma(d,d,m)));
+            numer(m,t) = exp((-0.5)*((x(t,d)-mu(d,m))^2)/sigma(d,d,m));
         end
-        b(t,m)=;
+        b(t,m)=numer(m,t)/denom(m);
+        weight_sum = omega(1,m)*b(t,m);
+        p(t,m) = (omega(1,m)*b(t,m))/weight_sum;
+        p_x = b(t,m) * p_m_x;
+        L=p(t,m)*log(b(t,m));
     end
     
+    
 end
 
 
@@ -114,11 +117,22 @@ end
 
 end
 
-function theta = UpdateParam(max_iter, epsilon, M)
+function theta = UpdateParam(T,max_iter, epsilon, M)
 % UpdateParam
 % inputs:
 %           max_iter   : maximum number of training iterations (integer)
 %           epsilon    : minimum improvement for iteration (float)
 %           M          : number of Gaussians/mixture (integer)
 % outputs:
+for m=1:M
+    
+    for t=1:T
+        omega_bar= sum(p(m,t))/T;
+    end
+end
+mu_bar;
+sigma_bar;
+
+    
+
 end
