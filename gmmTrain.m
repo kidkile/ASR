@@ -91,23 +91,48 @@ function L = ComputeLikelihood(x,D,T,omega,mu,sigma,max_iter, epsilon, M)
 %           epsilon    : minimum improvement for iteration (float)
 %           M          : number of Gaussians/mixture (integer)
 % outputs:
-
-for m=1:M
-    wmbm= zeros(M,9);
+b = zeros(T,M);
+for t=1:T
+    
+    for m=1:M
+        
+        for d=1:D
+            % By simplification of original equation
+            % log b_m(x)= - Sum_d_n=1{[(x[n]-mu[n])^2 / 2*sigma[n]^2] -
+            % (d/2)*log(2pi)-(1/2)*log*prod(sigma^2[n])}, which is
+            % log b_m(x)= - Sum_d_n=1 {(1/2)*x[n]^2*sigma[n]^(-2) - 
+            % mu[n]*x[n]*sigma[n]^(-2)}- Sum_d_n=1 {}
+            %
+            %
+            denom(m) =(2*pi)^(d/2)*sqrt(prod(sigma(d,d,m)));
+            numer(m,t) = sum((x(:,t)-mu(:,m))^2)/sigma(d,d,m);
+        end
+        b(t,m)=;numer(m,t)/denom(m);
+        weight_m = omega(1,m);
+        
+    end
+    
+    
 end
-% find bm, where x, mu,cov are d dimension vectors.
-b = zeros(T,M)
+
 
 
 
 
 end
 
-function theta = UpdateParam(max_iter, epsilon, M)
+function theta = UpdateParam(T,max_iter, epsilon, M)
 % UpdateParam
 % inputs:
 %           max_iter   : maximum number of training iterations (integer)
 %           epsilon    : minimum improvement for iteration (float)
 %           M          : number of Gaussians/mixture (integer)
 % outputs:
+weight = sum(pm_x,2)/T;
+mu =;
+for i=1:M
+    sigma(:,:,m) =
+end
+
+
 end
