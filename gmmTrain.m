@@ -78,7 +78,7 @@ end
 
 % Helper Functions as list below:
 
-function L = ComputeLikelihood(x,D,T,omega,mu,sigma,max_iter, epsilon, M)
+function L = ComputeLikelihood(x,T,M,D,omega,mu,sigma,max_iter, epsilon)
 % ComputeLikelihood
 % inputs:
 %           x          : mfcc_matrix
@@ -93,23 +93,14 @@ function L = ComputeLikelihood(x,D,T,omega,mu,sigma,max_iter, epsilon, M)
 % outputs:
 b = zeros(T,M);
 for t=1:T
-    
     for m=1:M
-        
         for d=1:D
-            % By simplification of original equation
-            % log b_m(x)= - Sum_d_n=1{[(x[n]-mu[n])^2 / 2*sigma[n]^2] -
-            % (d/2)*log(2pi)-(1/2)*log*prod(sigma^2[n])}, which is
-            % log b_m(x)= - Sum_d_n=1 {(1/2)*x[n]^2*sigma[n]^(-2) - 
-            % mu[n]*x[n]*sigma[n]^(-2)}- Sum_d_n=1 {}
-            %
-            %
-            denom(m) =(2*pi)^(d/2)*sqrt(prod(sigma(d,d,m)));
-            numer(m,t) = sum((x(:,t)-mu(:,m))^2)/sigma(d,d,m);
+            denom(m) =(2*pi)^(D/2)*sqrt(prod(sigma(d,d,m)));
+            numer(m,t) = exp((-0.5)*((x(t,d)-mu(d,m))^2)/sigma(d,d,m));
         end
-        b(t,m)=;numer(m,t)/denom(m);
+        b(t,m)=numer(m,t)/denom(m);
         weight_m = omega(1,m);
-        
+        p_m_x_theta =
     end
     
     
