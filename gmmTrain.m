@@ -20,8 +20,8 @@ function gmms = gmmTrain( dir_train, max_iter, epsilon, M )
 % (Test information #dont delete)
 % dir_train = '/Users/menglongji/Desktop/ASR/speechdata/Training'
 % DD = dir(dir_train)
-% speaker_dir = dir(strcat(dir_train,'/',DD(i).name));
-% mfcc_dir = dir( [ speaker_dir, filesep, '*', 'mfcc'] );
+% speaker_dir = strcat(dir_train,'/',DD(i).name);
+% mfcc_dir = dir( [ strcat(dir_train,'/',DD(i).name), filesep, '*', 'mfcc'] );
 %
 
 gmm = struct();
@@ -29,7 +29,7 @@ gmm = struct();
 DD = dir(dir_train);
 % a.initializing theta
 % a-1. Initialize omega_m randomly with constrains.
-omega = 1/M;
+omega = ones(1,M)*(1/M);
 % a-2. Initialize each mu_m to a random vector from the data
 mu = zeros(14,M);
 % a-3. Initialize sigma_m to a identity matrix.d =14.
@@ -43,15 +43,23 @@ improvement = Inf;
 
 for i=4:length(DD)
     % for each speaker, the directory of their mfcc files.
-    speaker_dir = dir(strcat(dir_train,'/',DD(i).name));
-    mfcc_dir = dir( [ speaker_dir, filesep, '*', 'mfcc'] );
+    speaker_dir = strcat(dir_train,'/',DD(i).name);
+    mfcc_dir = dir( [ strcat(dir_train,'/',DD(i).name), filesep, '*', 'mfcc'] );
+    % fact: there are always 9 mfcc files for each speaker.
     for w=1:length(mfcc_dir)
+        % mfcc input is mfcc_dir(i), set up matrix for it.
+        mfcc_dir(i)
         
         
         
     end
 end
-  
+i=0;
+while i<= max_iter & improvement >= epsilon
+    L:= ComputeLikelihood(X,theta);
+    theta:= UpdateParameters(theta,X,L);
+    
+end
     
     
     
@@ -60,4 +68,26 @@ end
     
 end
 
+% helper functions as list below:
 
+function L = ComputeLikelihood(max_iter, epsilon, M)
+% ComputeLikelihood
+% inputs:
+%           max_iter   : maximum number of training iterations (integer)
+%           epsilon    : minimum improvement for iteration (float)
+%           M          : number of Gaussians/mixture (integer)
+% outputs:
+for m=1:M
+    wmbm= zeros(M,9)
+end
+
+
+
+function theta = UpdateParam(max_iter, epsilon, M)
+% UpdateParam
+% inputs:
+%           max_iter   : maximum number of training iterations (integer)
+%           epsilon    : minimum improvement for iteration (float)
+%           M          : number of Gaussians/mixture (integer)
+% outputs:
+end
