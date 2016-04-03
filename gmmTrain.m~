@@ -28,11 +28,6 @@ gmm = struct();
 % input dir, for Training data with all speakers' foler
 DD = dir(dir_train);
 
-% theta ={w,u,E}
-theta = {omega,mu,sigma};
-prev_L = -Inf;
-improvement = Inf;  
-
 for i=4:length(DD)
     % for each speaker, the directory of their mfcc files.
     speaker_dir = strcat(dir_train,'/',DD(i).name);
@@ -44,27 +39,34 @@ for i=4:length(DD)
         matrix = [];
         mfcc_matrix = [matrix;dlmread([speaker_dir, filesep, mfcc_dir(1).name])];
     end
+    T = size(mfcc_matrix,1);
     D = size(mfcc_matrix,2);
     % a.initializing theta
     % a-1. Initialize omega_m randomly with constrains.
     omega = ones(1,M)*(1/M);
     % a-2. Initialize each mu_m to a random vector from the data
-    mu = zeros(M,D)
+    mu = zeros(M,D);
     msize = numel(mfcc_matrix);
-    for m=1:M
-    row=mfcc_matrix(randperm(msize,D))
-    mu(m,:)=mu(m,:)+row
+    for m=1:M   
+        row = mfcc_matrix(randperm(msize,D));
+        mu(m,:) = mu(m,:)+row;
     end
-    % a-3. Initialize sigma_m to a identity matrix =14.
+    % a-3. Initialize sigma_m to a identity matrix.
     for n=1:M
-        sigma(:,:,n) =eye(D);
+        sigma(:,:,n) = eye(D);
     end
 end
+% theta ={w,u,E}
+% theta = {omega,mu,sigma};
+
+
+prev_L = -Inf;
+improvement = Inf;  
 i=0;
-D = size(mfcc_matrix,2)
-while i<= max_iter & improvement >= epsilon
-    L:= ComputeLikelihood(X,theta);
-    theta:= UpdateParameters(theta,X,L);
+D = size(mfcc_matrix,2);
+while i<= max_iter && improvement >= epsilon
+    L = ComputeLikelihood(X,theta);
+    theta = UpdateParameters(theta,X,L);
     
 end
     
@@ -75,22 +77,25 @@ end
     
 end
 
-% helper functions as list below:
+% Helper Functions as list below:
 
-function L = ComputeLikelihood(D,T,max_iter, epsilon, M)
+function L = ComputeLikelihood(x,D,T,max_iter, epsilon, M)
 % ComputeLikelihood
 % inputs:
+%           x          : mfcc_matrix
+%           D          : size(mfcc_matrix,2), number of rows in mfcc_matrix
+%           
+%
 %           max_iter   : maximum number of training iterations (integer)
 %           epsilon    : minimum improvement for iteration (float)
 %           M          : number of Gaussians/mixture (integer)
 % outputs:
 for m=1:M
-    wmbm= zeros(M,9)
+    wmbm= zeros(M,9);
 end
 % find bm, where x, mu,cov are d dimension vectors.
 b = zeros(T,M)
-denom = (2*pi)^(d/2)*sqrt(prod(sigma))
-numer = 
+
 
 
 

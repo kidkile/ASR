@@ -39,6 +39,7 @@ for i=4:length(DD)
         matrix = [];
         mfcc_matrix = [matrix;dlmread([speaker_dir, filesep, mfcc_dir(1).name])];
     end
+    T = size(mfcc_matrix,1);
     D = size(mfcc_matrix,2);
     % a.initializing theta
     % a-1. Initialize omega_m randomly with constrains.
@@ -52,17 +53,17 @@ for i=4:length(DD)
     end
     % a-3. Initialize sigma_m to a identity matrix.
     for n=1:M
-        sigma(:,:,n) =eye(D);
+        sigma(:,:,n) = eye(D);
     end
 end
 % theta ={w,u,E}
-theta = {omega,mu,sigma};
+% theta = {omega,mu,sigma};
+
+
 prev_L = -Inf;
 improvement = Inf;  
-
-i=0;
-D = size(mfcc_matrix,2);
-while i<= max_iter && improvement >= epsilon
+l=0;
+while l<= max_iter && improvement >= epsilon
     L = ComputeLikelihood(X,theta);
     theta = UpdateParameters(theta,X,L);
     
@@ -75,22 +76,28 @@ end
     
 end
 
-% helper functions as list below:
+% Helper Functions as list below:
 
-function L = ComputeLikelihood(D,T,max_iter, epsilon, M)
+function L = ComputeLikelihood(x,D,T,omega,mu,sigma,max_iter, epsilon, M)
 % ComputeLikelihood
 % inputs:
+%           x          : mfcc_matrix
+%           D          : size(mfcc_matrix,2), number of columns in mfcc_matrix
+%           T          : size(mfcc_matrix,1), number of rows in mfcc_matrix
+%           omega      : as described before
+%           mu         : as described before
+%           sigma      : as described before
 %           max_iter   : maximum number of training iterations (integer)
 %           epsilon    : minimum improvement for iteration (float)
 %           M          : number of Gaussians/mixture (integer)
 % outputs:
+
 for m=1:M
-    wmbm= zeros(M,9)
+    wmbm= zeros(M,9);
 end
 % find bm, where x, mu,cov are d dimension vectors.
 b = zeros(T,M)
-denom = (2*pi)^(d/2)*sqrt(prod(sigma))
-numer = 
+
 
 
 
