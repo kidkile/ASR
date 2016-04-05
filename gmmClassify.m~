@@ -1,0 +1,4 @@
+function classification = gmmClassify(dir_test,)
+dir_train = ''
+dir_test = '/Users/menglongji/Desktop/ASR/speechdata/Testing'
+gmms = gmmTrain()
