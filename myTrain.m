@@ -2,7 +2,6 @@
 dir_train = 'speechdata/Training';
 bnt_dir = '/bnt/';
 
-HMM = struct();
 trainedHMM = struct();
 PHN_MFCC_data = struct();
 speakers = dir(dir_train);
@@ -34,7 +33,7 @@ for i = 1:number_of_training_examples
                 else
                     phn =  phoneme{3};
                 end
-                mfcc_phoneme = mfcc_data(phn_start:phn_end, 1:dimensions);
+                mfcc_phoneme = transpose(mfcc_data(phn_start:phn_end, 1:dimensions));
                 
                 if ~isfield(PHN_MFCC_data, phn)
                     PHN_MFCC_data.(phn) = {};
@@ -47,11 +46,11 @@ end
 
 addpath(genpath(bnt_dir));
 
-unique_phonemes = fields(PHN_MFCC_data);
+unique_phonemes = fieldnames(PHN_MFCC_data);
 for n = 1:length(unique_phonemes)
     phoneme_data = PHN_MFCC_data.(unique_phonemes{n});
-    HMM.(unique_phonemes{n}) = initHMM(phoneme_data, M, Q, initType);
-    trainedHMM.(unique_phonemes{n}) = trainHMM(HMM.(unique_phonemes{n}), phoneme_data, max_iter);
+    HMM = initHMM(phoneme_data, M, Q, initType);
+    trainedHMM.(unique_phonemes{n}) = trainHMM(HMM, phoneme_data, max_iter);
     save('trainedHMM.mat', 'trainedHMM');
 end
 
