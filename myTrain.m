@@ -12,7 +12,7 @@ output_file = './hmm/';
 
 HMM = struct();
 
-speakers = dir([train_dir, filesep]);
+speakers = dir(dir_train);
 
 TIMITlst = {'b','d','g','p','t','k','dx','q','jh','ch','s','sh','z','zh','f','th','v', 'dh','m','n','ng','em','en','eng','nx','l','r','w','y','hh','hv','el','iy','ih', 'eh','ey','ae','aa','aw','ah','ao','oy','ow','uh','uw','ux','er','ax','ix','axr', 'ax-h','pau','epi','h#','1','2','bcl','dcl', 'gcl', 'pcl', 'tcl', 'kcl'};
 
@@ -25,6 +25,14 @@ for i = 1:length(speakers)
         
         for j = 1:length(mfccs)
             mfcc_data = load([speaker_path, filesep, mfccs(j).name]);
+            phn_data = textread([speaker_path, filesep, phns(j).name], '%s', 'delimiter', '\n');
+            for k = 1:length(phn_data)
+                phoneme = strplit(' ', phn_data{k});
+                phn_start = (str2num(phoneme{1}) / 128) + 1;
+                phn_end = min((str2num(phoneme{2}) / 128), size(mfcc_data, 1));
+                phn =  phoneme{3};
+                
+            end
         end
         
     end 
