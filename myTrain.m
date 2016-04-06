@@ -11,7 +11,7 @@ max_iter = 3;
 output_file = 'HMM';
 
 PHN_MFCC_data = struct();
-
+trained_HMMs = struct();
 speakers = dir(dir_train);
 
 for i = 1:length(speakers)
@@ -41,6 +41,14 @@ for i = 1:length(speakers)
                 PHN_MFCC_data.(phn){length(PHN_MFCC_data.(phn)) + 1} = mfcc_phoneme;
             end
         end
-        
     end 
 end
+
+unique_phonemes = fields(PHN_MFCC_data);
+for n = 1:length(unique_phonemes)
+    phoneme_data = PHN_MFCC_data.(unique_phonemes{n});
+    HMM = initHMM(phoneme_data, M, Q, initType);
+    trained_HMMs.(unique_phonemes{n}) = trainHMM(HMM, phoneme_data, max_iter);
+end
+
+save('trained_HMMs.mat', 'trained_HMMs')
