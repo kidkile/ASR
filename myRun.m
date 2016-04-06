@@ -1,5 +1,7 @@
 dir_test = 'speechdata/Testing';
-bnt_dir = '/bnt/';
+hmm_dir = 'hmm/';
+bnt_dir = 'bnt/';
+addpath(genpath(bnt_dir));
 dimensions = 14;
 
 correct = 0;
@@ -24,6 +26,22 @@ for i = 1:length(phn_files)
         end
         mfcc_phoneme = mfcc(phn_start:phn_end, 1:dimensions);
         
+        hmms = dir([hmm_dir, filesep])l;
+        max_log_prob = -Inf;
+        phn_prediction = '';
+        for k = 1:length(hmms)
+            if not(strcmp(hmms{k}.name, '.') || strcmp(hmms{k}.name, '..'))
+                HMM = load([hmm_dir, filesep, hmms{k}.name]);
+                log_prob = loglikHMM(HMM, mfcc_phoneme);
+                if log_prob > max_log_prob
+                    max_log_prob = log_prob;
+                    phn_prediction = hmms{k}.name;
+                end    
+            end
+        end
+        if strcmp(phoneme, phn_prediction)
+            correct = correct + 1;
+        end
     end
     
 end
