@@ -65,6 +65,7 @@ for i=4:length(DD)
     while l<= max_iter && improvement >= epsilon
         [L,p_m_x_theta] = ComputeLikelihood(mfcc_matrix,T,M,D,omega,mu,sigma,max_iter, epsilon);
         [omega,mu,sigma] = UpdateParam(omega,p_m_x_theta,mfcc_matrix);
+        improvement = L -prev_L;
         prev_L = L;
         l = l+1;
     end
