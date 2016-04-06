@@ -8,13 +8,11 @@ M = 8;
 Q = 3;
 initType = 'kmeans';
 max_iter = 3;
-output_file = './hmm/';
+output_file = 'HMM';
 
-HMM = struct();
+PHN_MFCC_data = struct();
 
 speakers = dir(dir_train);
-
-TIMITlst = {'b','d','g','p','t','k','dx','q','jh','ch','s','sh','z','zh','f','th','v', 'dh','m','n','ng','em','en','eng','nx','l','r','w','y','hh','hv','el','iy','ih', 'eh','ey','ae','aa','aw','ah','ao','oy','ow','uh','uw','ux','er','ax','ix','axr', 'ax-h','pau','epi','h#','1','2','bcl','dcl', 'gcl', 'pcl', 'tcl', 'kcl'};
 
 for i = 1:length(speakers)
     speaker_name = speakers(i).name;
@@ -27,11 +25,20 @@ for i = 1:length(speakers)
             mfcc_data = load([speaker_path, filesep, mfccs(j).name]);
             phn_data = textread([speaker_path, filesep, phns(j).name], '%s', 'delimiter', '\n');
             for k = 1:length(phn_data)
-                phoneme = strplit(' ', phn_data{k});
+                phoneme = strsplit(' ', phn_data{k});
                 phn_start = (str2num(phoneme{1}) / 128) + 1;
                 phn_end = min((str2num(phoneme{2}) / 128), size(mfcc_data, 1));
-                phn =  phoneme{3};
+                if strcmp(phoneme{3}, 'h#')
+                    phn = 'sil';
+                else
+                    phn =  phoneme{3};
+                end
+                mfcc_phoneme = mfcc_data(phn_start:phn_end, :);
                 
+                if ~isfield(PHN_MFCC_data, phn)
+                    PHN_MFCC_data.(phn) = {};
+                end
+                PHN_MFCC_data.(phn){length(PHN_MFCC_data.(phn)) + 1} = mfcc_phoneme;
             end
         end
         
