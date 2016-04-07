@@ -24,7 +24,7 @@ function gmms = gmmTrain( dir_train, max_iter, epsilon, M )
 % mfcc_dir = dir( [ strcat(dir_train,'/',DD(4).name), filesep, '*', 'mfcc'] );
 % '/Users/menglongji/Desktop/ASR/speechdata/Training/FCJF0/SA1.mfcc'
 
-gmm = {};
+gmms = {};
 % input dir, for Training data with all speakers' foler
 DD = dir(dir_train);
 
@@ -50,31 +50,31 @@ for i=4:length(DD)
     for m=1:M   
         row = mfcc_matrix(randperm(msize,D));
         mu(m,:) = mu(m,:)+row;
-    end
     % a-3. Initialize sigma_m to a identity matrix.
-    for n=1:M
-        sigma(:,:,n) = eye(D);
+        sigma(:,:,m) = eye(D);
     end
+    
+   
     % theta ={w,u,E}
     % theta = {omega,mu,sigma};
     
     
     prev_L = -Inf;
     improvement = Inf;
+  
     l=0;
     while l<= max_iter && improvement >= epsilon
-        [L,p_m_x_theta] = ComputeLikelihood(mfcc_matrix,T,M,D,omega,mu,sigma,max_iter, epsilon);
-        [omega,mu,sigma] = UpdateParam(omega,p_m_x_theta,mfcc_matrix);
+        [L,p_m_t] = ComputeLikelihood(mfcc_matrix,T,M,D,omega,mu,sigma);
+        [omega,mu,sigma] = UpdateParam(mfcc_matrix,p_m_t,M);
         improvement = L -prev_L;
         prev_L = L;
         l = l+1;
     end
-    
-    
-    gmm.name = DD(i).name;
-    gmm.weights = omega;
-    gmm.means = mu;
-    gmm.cov = sigma;
+    o=i-3;
+    gmms{o}.name = DD(i).name;
+    gmms{o}.weights = omega;
+    gmms{o}.means = mu;
+    gmms{o}.cov = sigma;
     
     
     
@@ -84,7 +84,7 @@ end
 
 % Helper Functions as list below:
 
-function [L,p_m_x_theta] = ComputeLikelihood(input,T,M,D,omega,mu,sigma,max_iter, epsilon)
+function [L,p_m_t] = ComputeLikelihood(input,T,M,D,omega,mu,sigma)
 % ComputeLikelihood
 % inputs:
 %           input          : mfcc_matrix
@@ -98,39 +98,53 @@ function [L,p_m_x_theta] = ComputeLikelihood(input,T,M,D,omega,mu,sigma,max_iter
 %           M          : number of Gaussians/mixture (integer)
 % outputs:
 bm_init = zeros(T,M);
+p_m_t=zeros(T,M);
 for m=1:M
-    mu_m = mu(:,m).';
+    mu_m = mu(:,m)';
     sigma_m = diag(sigma(:,:,m));
-    temp1 = (input-repmat(mu_m,T,1))^2;
-    numerator = sum(temp1/repmat(sigma_m,T,1),2);
-    temp2 = (2*pi)^(D/2)  ;
+    rm =repmat(mu_m,T,1);
+    temp1 = (input(:,m)-rm(:,m)).^2;
+    numerator = exp(-0.5*(sum(temp1/repmat(sigma_m,T,1),2)));
+    temp2 = (2*pi).^(D/2)  ;
     denominator = temp2 * sqrt(prod(sigma_m));
     bm = bm_init;
     bm(:,m)= numerator / denominator;
     wm =repmat(omega,T,1);
-    p_m_x_theta = sum(wm*bm,2) ;
-    L =sum(log(p_m_x_theta));
+    p_x_theta = sum(wm.*bm,2) ;
+    L =sum(log(p_x_theta));
+    
+    
+    tmp=omega(1,m);
+    p_m_t(:,m)=repmat(tmp,T,1).*bm(:,m)./p_x_theta;
+    
 end
 end
 
-function [omega,mu,sigma] = UpdateParam(omega,p_m_x_theta,mfcc_matrix)
+function [omega,mu,sigma] = UpdateParam(mfcc_matrix,p_m_t,M)
 % UpdateParam
 % inputs:
 %           max_iter   : maximum number of training iterations (integer)
 %           epsilon    : minimum improvement for iteration (float)
 %           M          : number of Gaussians/mixture (integer)
 % outputs:
-p_m_t = zeros(T,M);
+% p_m_t = zeros(T,M);
+% for m=1:M
+%     wm =omega(1,m);
+%     p_m_t(:,m)=repmat(wm,T,1).* bm(:,m)./p_x_theta;
+% end
+% 
+% omega= sum(p_m_t,1)/T;
+% mu= (p_m_t.' * mfcc_matrix).'/repmat(sum(p_m_t,1),D,1);
+% temp = (p_m_t.' *(mfcc_matrix^2))'./repmat(sum(p_m_t, 1),D,1) - (mu_bar^2);
+% for i=1:M
+%     sigma(:,:,m) = diag(temp(:,m));
+% end
+T= size(mfcc_matrix,1);
+D=size(mfcc_matrix,2);
+omega = sum(p_m_t,1)/T;
+mu= (p_m_t'*mfcc_matrix)'./repmat(sum(p_m_t,1),D,1);
+sigm =(p_m_t' * (mfcc_matrix.^2))'./repmat(sum(p_m_t, 1),D,1) - mu.^2;
 for m=1:M
-    wm =omega(1,m);
-    p_m_t(:,m)=repmat(wm,T,1) * bm(:,m)/p_x_theta;
+    sigma(:,:,m)=diag(sigm(:,m));
 end
-
-omega= sum(p_m_t,1)/T;
-mu= (p_m_t.' * mfcc_matrix).'/repmat(sum(p_m_t,1),D,1);
-temp = (p_m_t.' *(mfcc_matrix^2))'./repmat(sum(p_m_t, 1),D,1) - (mu_bar^2);
-for i=1:M
-    sigma(:,:,m) = diag(temp(:,m));
-end
-
 end

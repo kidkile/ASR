@@ -34,7 +34,7 @@ for i=4:length(DD)
     mfcc_dir = dir( [ strcat(dir_train,'/',DD(i).name), filesep, '*', 'mfcc'] );
     
     % fact: there are always 9 mfcc files for each speaker.
-    for w=1:length(mfcc_DD)
+    for w=1:length(mfcc_dir)
         % mfcc input is mfcc_dir(i), set up matrix for it.
         matrix = [];
         mfcc_matrix = [matrix;dlmread([speaker_dir, filesep, mfcc_dir(1).name])];
@@ -61,19 +61,21 @@ for i=4:length(DD)
     
     prev_L = -Inf;
     improvement = Inf;
+  
     l=0;
     while l<= max_iter && improvement >= epsilon
-        L = ComputeLikelihood(X,theta);
-        theta = UpdateParameters(theta,X,L);
-        prev_L =L;
+        [L,p_m_t] = ComputeLikelihood(mfcc_matrix,T,M,D,omega,mu,sigma);
+%         [omega,mu,sigma] = UpdateParam(mfcc_matrix,L,omega,mu,sigma);
+        improvement = L -prev_L;
+        prev_L = L;
         l = l+1;
     end
     
-    gmm{k}={};
-    gmm{k}.name = DD(i).name;
-    gmm{k}.weights = omega;
-    gmm{k}.means = mu;
-    gmm{k}.cov = sigma;
+    
+    gmm.name = DD(i).name;
+    gmm.weights = omega;
+    gmm.means = mu;
+    gmm.cov = sigma;
     
     
     
@@ -83,7 +85,7 @@ end
 
 % Helper Functions as list below:
 
-function [L,p_m_x_theta] = ComputeLikelihood(input,T,M,D,omega,mu,sigma,max_iter, epsilon)
+function [L,p_m_t] = ComputeLikelihood(input,T,M,D,omega,mu,sigma)
 % ComputeLikelihood
 % inputs:
 %           input          : mfcc_matrix
@@ -97,39 +99,49 @@ function [L,p_m_x_theta] = ComputeLikelihood(input,T,M,D,omega,mu,sigma,max_iter
 %           M          : number of Gaussians/mixture (integer)
 % outputs:
 bm_init = zeros(T,M);
+p_m_t=zeros(T,M);
 for m=1:M
-    mu_m = mu(:,m).';
+    mu_m = mu(:,m)';
     sigma_m = diag(sigma(:,:,m));
-    temp1 = (input-repmat(mu,T,1))^2;
-    numerator = sum(temp/repmat(sigma_m,T,1),2);
-    temp2 = (2*pi)^(D/2)  ;
+    rm =repmat(mu_m,T,1);
+    temp1 = (input(:,m)-rm(:,m)).^2;
+    numerator = exp(-0.5*(sum(temp1/repmat(sigma_m,T,1),2)));
+    temp2 = (2*pi).^(D/2)  ;
     denominator = temp2 * sqrt(prod(sigma_m));
     bm = bm_init;
     bm(:,m)= numerator / denominator;
     wm =repmat(omega,T,1);
-    p_m_x_theta = sum(wm*bm,2) ;
-    L =sum(log(p_m_x_theta));
+    p_x_theta = sum(wm.*bm,2) ;
+    L =sum(log(p_x_theta));
+    
+    
+    tmp=omega(1,m);
+    p_m_t(:,m)=repmat(tmp,T,1).*bm(:,m)./p_x_theta;
+    
 end
 end
 
-function [omega_m,mu_m,sigama_m] = UpdateParam(p_m_x_theta,mfcc_matrix)
+function [omega,mu,sigma] = UpdateParam(mfcc_matrix,p_m_t,omega,mu,sigma)
 % UpdateParam
 % inputs:
 %           max_iter   : maximum number of training iterations (integer)
 %           epsilon    : minimum improvement for iteration (float)
 %           M          : number of Gaussians/mixture (integer)
 % outputs:
-p_m_t = zeros(T,M);
-for m=1:M
-    wm =omega(1,m);
-    p_m_t(:,m) ;
-   
-end
-
-omega_bar= p_m_x_theta/T;
-mu_bar=;
-sigma_bar;
-
-    
-
+% p_m_t = zeros(T,M);
+% for m=1:M
+%     wm =omega(1,m);
+%     p_m_t(:,m)=repmat(wm,T,1).* bm(:,m)./p_x_theta;
+% end
+% 
+% omega= sum(p_m_t,1)/T;
+% mu= (p_m_t.' * mfcc_matrix).'/repmat(sum(p_m_t,1),D,1);
+% temp = (p_m_t.' *(mfcc_matrix^2))'./repmat(sum(p_m_t, 1),D,1) - (mu_bar^2);
+% for i=1:M
+%     sigma(:,:,m) = diag(temp(:,m));
+% end
+T= size(mfcc_matrix,1);
+M=size(mfcc_matrix,2);
+omega = sum(p_m_t,1)/T;
+mu= (p_m_t )
 end
