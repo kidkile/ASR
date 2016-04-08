@@ -31,7 +31,7 @@ DD = dir(dir_train);
 for i=4:length(DD)
     % for each speaker, the directory of their mfcc files.
     speaker_dir = strcat(dir_train,'/',DD(i).name);
-    mfcc_dir = dir( [ strcat(dir_train,'/',DD(i).name), filesep, '*', 'mfcc'] );
+    mfcc_dir = dir( [ speaker_dir, filesep, '*', 'mfcc'] );
     
     % fact: there are always 9 mfcc files for each speaker.
     for w=1:length(mfcc_dir)
@@ -97,23 +97,22 @@ function [L,p_m_t] = ComputeLikelihood(input,T,M,D,omega,mu,sigma)
 %           epsilon    : minimum improvement for iteration (float)
 %           M          : number of Gaussians/mixture (integer)
 % outputs:
-bm_init = zeros(T,M);
-p_m_t=zeros(T,M);
+bm =zeros(T,M);
+bm_log = zeros(T,M);
+wmbm = zeros(T,M);
 for m=1:M
-    mu_m = mu(:,m)';
-    sigma_m = diag(sigma(:,:,m))';
-    rm =repmat(mu_m,T,1);
-    temp1 = (input-rm).^2;
-    numerator = exp(-0.5*(sum(temp1/repmat(sigma_m,T,1),2)));
-    temp2 = (2*pi).^(D/2)  ;
-    denominator = temp2 * sqrt(prod(sigma_m));
-    bm = bm_init;
-    bm(:,m)= numerator / denominator;
+    x = input-repmat(mu(:,m).',T,1);
+    sigma_m = diag(sigma(:,:,m))';%1xD
+    tmp = sum(((x.*x)./ repmat(sigma_m,T,1)),2);
+    deno = ((2*pi)^(D/2)).* sqrt(prod(prod(sigma_m)));
+    bm_log(:,m)= exp(-0.5*tmp)./deno;
+    %disp(size(bm_log));
     wm =repmat(omega,T,1);
-    p_x_theta = sum(wm.*bm,2) ;
-    L =sum(log(p_x_theta));
-    
-    
+    %disp(size(wm));
+    wmbm(:,m) = wm(:,m).*bm_log(:,m);
+    p_x_theta=sum(wmbm,2);
+    %disp(log(p_x_theta));
+    L = sum(log(p_x_theta));
     tmp=omega(1,m);
     p_m_t(:,m)=repmat(tmp,T,1).*bm(:,m)./p_x_theta;
     
@@ -126,19 +125,7 @@ function [omega,mu,sigma] = UpdateParam(mfcc_matrix,p_m_t,M)
 %           max_iter   : maximum number of training iterations (integer)
 %           epsilon    : minimum improvement for iteration (float)
 %           M          : number of Gaussians/mixture (integer)
-% outputs:
-% p_m_t = zeros(T,M);
-% for m=1:M
-%     wm =omega(1,m);
-%     p_m_t(:,m)=repmat(wm,T,1).* bm(:,m)./p_x_theta;
-% end
-% 
-% omega= sum(p_m_t,1)/T;
-% mu= (p_m_t.' * mfcc_matrix).'/repmat(sum(p_m_t,1),D,1);
-% temp = (p_m_t.' *(mfcc_matrix^2))'./repmat(sum(p_m_t, 1),D,1) - (mu_bar^2);
-% for i=1:M
-%     sigma(:,:,m) = diag(temp(:,m));
-% end
+
 T= size(mfcc_matrix,1);
 D=size(mfcc_matrix,2);
 omega = sum(p_m_t,1)/T;
