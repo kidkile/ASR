@@ -27,11 +27,11 @@ for i = 1:length(hyp)
    
    n = length(ref_sentence);
    m = length(hyp_sentence);
-   dist_mat = zeroes(n+1, m+1);
+   dist_mat = zeros(n+1, m+1);
    dist_mat(1, :) = Inf;
    dist_mat(:, 1) = Inf;
    dist_mat(1, 1) = 0;
-   back_mat = zeroes(n+1, m+1);
+   back_mat = zeros(n+1, m+1);
    for i = 1:n
        for j = 1:m
            del = dist_mat(i, j+1) + 1;
@@ -43,7 +43,7 @@ for i = 1:length(hyp)
            back_mat(i+1, j+1) = am;
        end
    end
-   error_counter = zeroes(1, 4);
+   error_counter = zeros(1, 4);
    i = n+1;
    j = m+1;
    while not((j == 1) && (i == 1))

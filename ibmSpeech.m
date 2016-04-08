@@ -15,6 +15,6 @@ for i=1:30
     curl = ['curl -u ', username, ':', password, ' -X POST', ...
         c1, c2, c3, http];
     [status, result] = unix(curl);
-    data = JSON.parse(result);
-    disp(data.results{1, 1}.alternatives{1, 1}.transcript);
+    %data = JSON.parse(result);
+    %disp(data.results{1, 1}.alternatives{1, 1}.transcript);
 end
