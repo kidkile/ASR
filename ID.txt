@@ -3,7 +3,7 @@ First Name: MENGLONG
 Student ID Number: 1000310843
 CDF login id: c4jimeng
 Contact email address: menglong.ji@mail.utoronto.ca
-BlueMix credentials: username,password
+BlueMix credentials:  (partners credentials used) '5e0c57e7-e358-43bd-a01e-a41ddd2c612a', 8ygvoOxxLVTT
 UG/Grad?: UG
 Voice Banking username: menglongji
 number of attempts in Voice Banking: 5 times
@@ -13,14 +13,14 @@ own work, and is in accordance with the University of Toronto Code of
 Behaviour on Academic Matters and the Code of Student Conduct, as well
 as the collaboration policies of this course.
 
-Last name: marathe
-First Name: tarang
+Last name: Marathe
+First Name: Tarang
 Student ID Number: 1000700495
 CDF login id: g4marath
 Contact email address: tarang.marathe@mail.utoronto.ca
-BlueMix credentials: username,password
+BlueMix credentials: '5e0c57e7-e358-43bd-a01e-a41ddd2c612a', 8ygvoOxxLVTT
 UG/Grad?: UG
-Voice Banking username: 
+Voice Banking username: tmarathe
 number of attempts in Voice Banking: 5 times
 
 
