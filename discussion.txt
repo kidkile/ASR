@@ -3,25 +3,25 @@
 (1). How might you improve the classification accuracy of the Gaussian mixtures,
 without adding more training data?
 
-For improving the classification accuracy of the Gaussian mixtures,
+For improving the classification accuracy of the Gaussian mixtures,we can do followings:
 (a) Increasing the value of max_iter, we gain the better classification accuracy of Gaussian mixtures .
-(b) Increasing component count.
-
-
-
+(b) Increasing component count in order to increase the accurcy.
 
 (2). When would your classifier decide that a given test utterance comes from
 none of the trained speaker models, and how would your classifier come to this decision?
 
-(a) loglik_threshold
-(b)
-
-
+ Set up a value named'thereshold', check for convergence so that my classifier can
+decide that a given test utterance comes from none of the trained speaker models
+by checking the value of loglik_thereshould. If L-prev_L is less than the value
+of 'thereshould', return break.
 
 
 
 (3). Can you think of some alternative methods for doing speaker identification
- that don’t use Gaussian mixtures?
+ that dont use Gaussian mixtures?
+
+Yes,  Support Vector Machines ?SVM?classifier and K-means can do speaker ideneidfication
+that dont use Gaussian mixtures.
 
 
 3.2 Experiments and discussion.
