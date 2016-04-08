@@ -37,7 +37,7 @@ for i=4:length(DD)
     for w=1:length(mfcc_dir)
         % mfcc input is mfcc_dir(i), set up matrix for it.
         matrix = [];
-        mfcc_matrix = [matrix;dlmread([speaker_dir, filesep, mfcc_dir(1).name])];
+        mfcc_matrix = [matrix;dlmread([speaker_dir, filesep, mfcc_dir(w).name])];
     end
     T = size(mfcc_matrix,1);
     D = size(mfcc_matrix,2);
