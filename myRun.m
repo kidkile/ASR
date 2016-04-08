@@ -1,17 +1,18 @@
 dir_test = 'speechdata/Testing';
-hmm_dir = 'hmm/';
-bnt_dir = 'bnt/';
-addpath(genpath(bnt_dir));
+hmm = load('hmm/standard_HMM.mat');
+hmm = hmm.trainedHMM;
+bnt_dir = '/bnt/';
 dimensions = 14;
 
 correct = 0;
 total = 0;
+addpath(genpath(bnt_dir));
 
 phn_files = dir([dir_test, filesep, '*.phn']);
 mfcc_files = dir([dir_test, filesep, '*.mfcc']);
 for i = 1:length(phn_files)
-    mfcc = load([dir_test, filesep, mfcc_files{i}.name]);
-    phn = textread([dir_test, filesep, phn_files{i}.name], '%s', 'delimiter', '\n');
+    mfcc = load([dir_test, filesep, mfcc_files(i).name]);
+    phn = textread([dir_test, filesep, phn_files(i).name], '%s', 'delimiter', '\n');
     
     total = total + length(phn);
     
@@ -24,20 +25,17 @@ for i = 1:length(phn_files)
         else
             phoneme =  phn_data{3};
         end
-        mfcc_phoneme = mfcc(phn_start:phn_end, 1:dimensions);
+        mfcc_phoneme = transpose(mfcc(phn_start:phn_end, 1:dimensions));
         
-        hmms = dir([hmm_dir, filesep])l;
         max_log_prob = -Inf;
         phn_prediction = '';
-        for k = 1:length(hmms)
-            if not(strcmp(hmms{k}.name, '.') || strcmp(hmms{k}.name, '..'))
-                HMM = load([hmm_dir, filesep, hmms{k}.name]);
-                log_prob = loglikHMM(HMM, mfcc_phoneme);
-                if log_prob > max_log_prob
-                    max_log_prob = log_prob;
-                    phn_prediction = hmms{k}.name;
-                end    
-            end
+        unique_phns = fieldnames(hmm);
+        for k = 1:length(unique_phns)
+            log_prob = loglikHMM(hmm.(unique_phns{k}), mfcc_phoneme);
+            if log_prob > max_log_prob
+                max_log_prob = log_prob;
+                phn_prediction = unique_phns{k};
+            end    
         end
         if strcmp(phoneme, phn_prediction)
             correct = correct + 1;
