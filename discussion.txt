@@ -100,6 +100,6 @@ the speechdata/Testing directory. Th values for the entire data set were SE =
 ----------
 
 Using the IBM Watson speech recognition platform, the .flac files from
-speechdata/Testing were transcribed, and the results were placed in a new
-hypothesis file. The Levenshtein algorithm was run on them to calculate the
-Levenshtein distance of the results, and the following results were reported:
+speechdata/Testing were transcribed and the Levenshtein algorithm was run on
+them to calculate the Levenshtein distance of the results. The following results
+ were reported:
