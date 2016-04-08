@@ -1,21 +1,16 @@
-dir_test = 'speechdata/Testing';
+dir_test = '/u/cs401/speechdata/Testing';
 
-bnt_dir = '/bnt/';
+bnt_dir = '/u/cs401/A3_ASR/code/FullBNT-1.0.7/';
 
 
 results = struct();
 
-all_hmms = dir (['hmm/train', filesep, '*.mat']);
+all_hmms = dir (['', filesep, '*.mat']);
 for l = 1:length(all_hmms)
-    if not(strcmp(all_hmms(l).name, 'standard2_HMM.mat') || ...
-            strcmp(all_hmms(l).name, 'standard_HMM.mat') || ...
-            strcmp(all_hmms(l).name, 'dim1_iter20_HMM.mat') || ...
-            strcmp(all_hmms(l).name, 'dim3_iter20_HMM.mat') || ...
-            strcmp(all_hmms(l).name, 'dim7_iter20_HMM.mat') || ...
-            strcmp(all_hmms(l).name, 'dim10_iter20_HMM.mat'))
+    if not(strcmp(all_hmms(l).name, 'standard2_HMM.mat'))
         
         hmm_file = all_hmms(l).name;
-        hmm = load(['hmm/train', filesep, hmm_file]);
+        hmm = load(['', filesep, hmm_file]);
         hmm = hmm.trainedHMM;
         dimensions = 14;
         

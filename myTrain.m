@@ -1,6 +1,6 @@
 % Remember to change for CDF file structure
-dir_train = 'speechdata/Training';
-bnt_dir = '/bnt/';
+dir_train = '/u/cs401/speechdata/Training';
+bnt_dir = '/u/cs401/A3_ASR/code/FullBNT-1.0.7/';
 
 trainedHMM = struct();
 PHN_MFCC_data = struct();
@@ -51,7 +51,7 @@ for n = 1:length(unique_phonemes)
     phoneme_data = PHN_MFCC_data.(unique_phonemes{n});
     HMM = initHMM(phoneme_data, M, Q, initType);
     trainedHMM.(unique_phonemes{n}) = trainHMM(HMM, phoneme_data, max_iter);
-    save('hmm/states3_iter3_HMM.mat', 'trainedHMM');
+    save('states3_iter3_HMM.mat', 'trainedHMM');
 end
 
 
