@@ -28,17 +28,17 @@ that dont use Gaussian mixtures.
 
 Using a the default HMM with 8 gaussian mixtures, 3 states, all 30 examples of
 training data, all 14 dimensions of the data, and a maximum iteration limit of
-20, the number of correctly identified phonemes was found to be 492/1096 or 44.89%.
+20, the number of correctly identified phonemes was found to be 507/1096 or 46.25%.
 
 3.2 Analysis of various HMMs
 ----------------------------
 
 train size       mixtures        states      max_iter        dimensions      correct/total
 
-    30              8               3           20              14              492/1096
-    30              5               3           20              14
-    30              2               3           20              14
-    30              1               3           20              14
+    30              8               3           20              14              507/1096
+    30              5               3           20              14              503/1096
+    30              2               3           20              14              228/1096
+    30              1               3           20              14              198/1096
 
     30              8               3           3               14              503/1096
     24              8               3           3               14              451/1096
@@ -68,9 +68,9 @@ At 1 state per mixtures, accuracy was 44.5%, and at 3 states it was 46.1%
 Of course, increases in the amount of training data used lead to the most
 significant increases in accuracy, from 17.8% at 8 training examples to 45.8%
 when using all 30 examples. Interestingly, it appears that restricting the max
-number of iteration to 3 lead to a marginally better classification rate than
-when the max_iter value was 20 - there was an approximately 1% improvement
-in classification rates because of this.
+number of iteration to 3 lead to only marginally worse classification rate than
+when the max_iter value was 20, but much faster processing time - there was an
+approximately 1% improvement in classification rates because of this.
 
 
 - When would your classifier decide that a given test utterance comes from none
@@ -96,18 +96,13 @@ from hypothesis.txt, and the reference sentences unkn_1.txt - unkn_30.txt, from
 the speechdata/Testing directory. Th values for the entire data set were SE =
 0.134375, IE = 0.034375, DE = 0.040625, and LEV_DIST = 0.209375.
 
-4.1 Report
+4 Report
 ----------
 
 Using the IBM Watson speech recognition platform, the .flac files from
 speechdata/Testing were transcribed and the Levenshtein algorithm was run on
 them to calculate the Levenshtein distance of the results. The IBM assisted
 transcription was listed in ibm_hypotheses.txt.
-
-4.2
----
-
-
 
 Bonus
 -----
