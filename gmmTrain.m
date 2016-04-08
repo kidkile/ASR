@@ -31,7 +31,7 @@ DD = dir(dir_train);
 for i=4:length(DD)
     % for each speaker, the directory of their mfcc files.
     speaker_dir = strcat(dir_train,'/',DD(i).name);
-    mfcc_dir = dir( [ strcat(dir_train,'/',DD(i).name), filesep, '*', 'mfcc'] );
+    mfcc_dir = dir( [ speaker_dir, filesep, '*', 'mfcc'] );
     
     % fact: there are always 9 mfcc files for each speaker.
     for w=1:length(mfcc_dir)
