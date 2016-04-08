@@ -1,13 +1,13 @@
 % This is a script for classfying speakers.
 %
 %
-dir_train = '/Users/menglongji/Desktop/ASR/speechdata/Training'
-dir_test = '/Users/menglongji/Desktop/ASR/speechdata/Testing'
+% dir_train = '/Users/menglongji/Desktop/ASR/speechdata/Training'
+% dir_test = '/Users/menglongji/Desktop/ASR/speechdata/Testing'
 
 % 
 % mfcc_dir = dir( [ dir_test, filesep, '*', 'mfcc'] );
-% dir_train = '/u/cs401/speechdata/Training';
-% dir_test = '/u/cs401/speechdata/Testing';
+dir_train = '/u/cs401/speechdata/Training';
+dir_test = '/u/cs401/speechdata/Testing';
 
 DD = dir(dir_train);
 max_iter = 10;
