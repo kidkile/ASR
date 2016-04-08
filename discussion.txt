@@ -23,8 +23,14 @@ none of the trained speaker models, and how would your classifier come to this d
 (3). Can you think of some alternative methods for doing speaker identification
  that don’t use Gaussian mixtures?
 
+3.1 Proportion of correctly identified phonemes
+-----------------------------------------------
 
-3.2 Experiments and discussion.
+Using a the default HMM with 8 gaussian mixtures, 3 states, all 30 examples of
+training data, all 14 dimensions of the data, and a maximum iteration limit of
+20, the number of correctly identified phonemes was found to be 492/1096 or 44.89%.
+
+3.2 Analysis of various HMMs
 -------------------------------
 
 train size       mixtures        states      max_iter        dimensions      correct/total
@@ -48,6 +54,14 @@ train size       mixtures        states      max_iter        dimensions      cor
     30              8               3           3               14              506/1096
     30              8               2           5               14              511/1096
     30              8               1           5               14              488/1096
+
+3.3 Levenshtein distance
+------------------------
+
+In this section we measured the Levenshtein distance between the transcriptions
+from hypothesis.txt, and the reference sentences unkn_1.txt - unkn_30.txt, from
+the speechdata/Testing directory. Th values for the entire data set were SE =
+0.134375, IE = 0.034375, DE = 0.040625, and LEV_DIST = 0.209375.
 
 4.1 Report
 ----------
