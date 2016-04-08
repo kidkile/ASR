@@ -25,6 +25,7 @@ none of the trained speaker models, and how would your classifier come to this d
 
 
 3.2 Experiments and discussion.
+-------------------------------
 
 train size       mixtures        states      max_iter        dimensions      correct/total
 
@@ -47,3 +48,11 @@ train size       mixtures        states      max_iter        dimensions      cor
     30              8               3           3               14              506/1096
     30              8               2           5               14              511/1096
     30              8               1           5               14              488/1096
+
+4.1 Report
+----------
+
+Using the IBM Watson speech recognition platform, the .flac files from
+speechdata/Testing were transcribed, and the results were placed in a new
+hypothesis file. The Levenshtein algorithm was run on them to calculate the
+Levenshtein distance of the results, and the following results were reported:

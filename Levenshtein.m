@@ -21,7 +21,7 @@ for i = 1:length(hyp)
    hyp_sentence = hyp_parts{3};
    
    ref_parts = strsplit(' ', ref{1});
-   ref_sentence = ref_parts{3:};
+   ref_sentence = ref_parts(3:end);
    ref_count = ref_count + length(ref_sentence);
     
 end
@@ -30,3 +30,5 @@ SE = SE / ref_count;
 IE = IE / ref_count;
 DE = DE / ref_count;
 LEV_DIST = SE + IE + DE;
+
+return
