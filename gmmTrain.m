@@ -43,19 +43,19 @@ for i=4:length(DD)
     D = size(mfcc_matrix,2);
     % a.initializing theta
     % a-1. Initialize omega_m randomly with constrains.
-    omega = ones(1,M)*(1/M);
+    omega = ones(1,M)*(1/M);% omega is 1xM;
     % a-2. Initialize each mu_m to a random vector from the data
-    mu = zeros(M,D);
+    mu = zeros(D,M); % DxM matrix ie. 14x8
     msize = numel(mfcc_matrix);
     for m=1:M   
-        row = mfcc_matrix(randperm(msize,D));
-        mu(m,:) = mu(m,:)+row;
+        cloumn = mfcc_matrix(randperm(msize,D));% (1xD)1x14
+        mu(:,m) = mu(:,m)+cloumn.';% mu is 14x8(DxM)
     % a-3. Initialize sigma_m to a identity matrix.
-        sigma(:,:,m) = eye(D);
+        sigma(:,:,m) = eye(D);%DxDxM 14x14x8
     end
     
    
-    % theta ={w,u,E}
+    % theta ={weight,means,cov}
     % theta = {omega,mu,sigma};
     
     
@@ -101,9 +101,9 @@ bm_init = zeros(T,M);
 p_m_t=zeros(T,M);
 for m=1:M
     mu_m = mu(:,m)';
-    sigma_m = diag(sigma(:,:,m));
+    sigma_m = diag(sigma(:,:,m))';
     rm =repmat(mu_m,T,1);
-    temp1 = (input(:,m)-rm(:,m)).^2;
+    temp1 = (input-rm).^2;
     numerator = exp(-0.5*(sum(temp1/repmat(sigma_m,T,1),2)));
     temp2 = (2*pi).^(D/2)  ;
     denominator = temp2 * sqrt(prod(sigma_m));
