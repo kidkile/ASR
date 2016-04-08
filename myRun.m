@@ -1,27 +1,35 @@
 dir_test = 'speechdata/Testing';
 
 bnt_dir = '/bnt/';
-dimensions = 14;
+
 
 results = struct();
 
-all_hmms = dir (['hmm', filesep, '*.mat']);
+all_hmms = dir (['hmm/train', filesep, '*.mat']);
 for l = 1:length(all_hmms)
-    if not(strcmp(all_hmms(l).name, 'standard2_HMM.mat') || strcmp(all_hmms(l).name, 'standard_HMM.mat'))
+    if not(strcmp(all_hmms(l).name, 'standard2_HMM.mat') || ...
+            strcmp(all_hmms(l).name, 'standard_HMM.mat') || ...
+            strcmp(all_hmms(l).name, 'dim1_iter20_HMM.mat') || ...
+            strcmp(all_hmms(l).name, 'dim3_iter20_HMM.mat') || ...
+            strcmp(all_hmms(l).name, 'dim7_iter20_HMM.mat') || ...
+            strcmp(all_hmms(l).name, 'dim10_iter20_HMM.mat'))
         
         hmm_file = all_hmms(l).name;
-        hmm = load(['hmm', filesep, hmm_file]);
+        hmm = load(['hmm/train', filesep, hmm_file]);
         hmm = hmm.trainedHMM;
+        dimensions = 14;
         
-        if strcmp(hmm_file, 'dim10_iter20_HMM.mat')
-            dimensions = 10;
-        elseif strcmp(hmm_file, 'dim1_iter20_HMM.mat')
-            dimensions = 1;
-        elseif strcmp(hmm_file, 'dim3_iter20_HMM.mat')
-            dimensions = 3;
-        elseif strcmp(hmm_file, 'dim7_iter20_HMM.mat')
-            dimensions = 7;
-        end
+%         if strcmp(hmm_file, 'dim10_iter20_HMM.mat')
+%             dimensions = 10;
+%         elseif strcmp(hmm_file, 'dim1_iter20_HMM.mat')
+%             dimensions = 1;
+%         elseif strcmp(hmm_file, 'dim3_iter20_HMM.mat')
+%             dimensions = 3;
+%         elseif strcmp(hmm_file, 'dim7_iter20_HMM.mat')
+%             dimensions = 7;
+%         else
+%             dimensions = 14;
+%         end
         
         correct = 0;
         total = 0;
